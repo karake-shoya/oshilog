@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
 import NavBar from '@/components/NavBar'
+import { ToastProvider } from '@/lib/toast-context'
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ['latin'],
@@ -21,14 +22,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={`${notoSansJP.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-gray-50 font-sans">
-        <NavBar />
-        <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
-          {children}
-        </main>
-        <footer className="border-t border-gray-200 py-4 text-center text-sm text-gray-500">
-          © 2026 Oshilog - EBiDAN系ファンのための推し活カレンダー
-        </footer>
+      <body className="min-h-full flex flex-col font-sans">
+        <ToastProvider>
+          <NavBar />
+          <main className="flex-1 container mx-auto px-4 py-6 max-w-7xl">
+            {children}
+          </main>
+          <footer className="border-t border-gray-200 py-4 text-center text-sm text-gray-400">
+            © 2026 おしろぐ - EBiDAN系ファンの推し活カレンダー
+          </footer>
+        </ToastProvider>
       </body>
     </html>
   )

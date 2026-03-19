@@ -13,10 +13,8 @@ export default function NavBar() {
   const supabase = createClient()
 
   useEffect(() => {
-    // 初回ロード時にセッション取得
     supabase.auth.getUser().then(({ data }) => setUser(data.user))
 
-    // 認証状態の変化を監視
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
@@ -30,17 +28,17 @@ export default function NavBar() {
   }
 
   const navLinks = [
-    { href: '/',        label: 'カレンダー' },
-    { href: '/groups',  label: 'グループ一覧' },
-    { href: '/mypage',  label: 'マイページ' },
+    { href: '/',       label: 'カレンダー' },
+    { href: '/groups', label: 'グループ' },
+    { href: '/mypage', label: 'マイページ' },
   ]
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between h-14">
           {/* ロゴ */}
-          <Link href="/" className="text-xl font-bold text-indigo-600 tracking-tight">
+          <Link href="/" className="text-xl font-bold tracking-tight bg-gradient-to-r from-oshi-pink to-oshi-purple bg-clip-text text-transparent">
             おしろぐ
           </Link>
 
@@ -52,8 +50,8 @@ export default function NavBar() {
                 href={href}
                 className={`text-sm font-medium transition-colors ${
                   pathname === href
-                    ? 'text-indigo-600'
-                    : 'text-gray-600 hover:text-indigo-600'
+                    ? 'text-oshi-pink'
+                    : 'text-gray-500 hover:text-oshi-pink'
                 }`}
               >
                 {label}
@@ -65,12 +63,12 @@ export default function NavBar() {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
-                <span className="text-sm text-gray-500 truncate max-w-[160px]">
+                <span className="text-xs text-gray-400 truncate max-w-[140px]">
                   {user.email}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-sm px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
+                  className="text-sm px-3 py-2 min-h-[44px] rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
                 >
                   ログアウト
                 </button>
@@ -78,7 +76,7 @@ export default function NavBar() {
             ) : (
               <Link
                 href="/login"
-                className="text-sm px-4 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                className="text-sm px-4 py-2 min-h-[44px] flex items-center rounded-lg bg-oshi-pink text-white font-medium hover:bg-oshi-pink-dark transition-colors"
               >
                 ログイン
               </Link>
@@ -87,12 +85,12 @@ export default function NavBar() {
 
           {/* ハンバーガーメニュー（モバイル） */}
           <button
-            className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100"
+            className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="メニュー"
           >
-            <span className="block w-5 h-0.5 bg-current mb-1" />
-            <span className="block w-5 h-0.5 bg-current mb-1" />
+            <span className="block w-5 h-0.5 bg-current mb-1.5" />
+            <span className="block w-5 h-0.5 bg-current mb-1.5" />
             <span className="block w-5 h-0.5 bg-current" />
           </button>
         </div>
@@ -104,9 +102,9 @@ export default function NavBar() {
               <Link
                 key={href}
                 href={href}
-                className={`block px-2 py-2 text-sm rounded-md ${
+                className={`block px-3 py-3 text-sm rounded-lg min-h-[44px] flex items-center ${
                   pathname === href
-                    ? 'text-indigo-600 bg-indigo-50'
+                    ? 'text-oshi-pink bg-oshi-pink-light font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setMenuOpen(false)}
@@ -118,17 +116,17 @@ export default function NavBar() {
               {user ? (
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                  className="w-full text-left px-3 py-3 min-h-[44px] text-sm text-gray-600 hover:bg-gray-50 rounded-lg"
                 >
                   ログアウト
                 </button>
               ) : (
                 <Link
                   href="/login"
-                  className="block px-2 py-2 text-sm text-indigo-600 font-medium"
+                  className="block px-3 py-3 min-h-[44px] text-sm text-oshi-pink font-medium flex items-center"
                   onClick={() => setMenuOpen(false)}
                 >
-                  ログイン
+                  ログイン / 新規登録
                 </Link>
               )}
             </div>

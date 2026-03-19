@@ -59,16 +59,16 @@ export default async function HomePage() {
         </h1>
         <div className="flex items-center gap-3">
           {user && followedGroupIds.length === 0 && (
-            <p className="text-sm text-gray-500 hidden sm:block">
-              <a href="/groups" className="text-indigo-600 hover:underline">グループ一覧</a>からフォローするとイベントが表示されます
+            <p className="text-sm text-gray-400 hidden sm:block">
+              <a href="/groups" className="text-oshi-pink hover:underline">グループ</a>をフォローしてね♪
             </p>
           )}
           {user && (
             <a
               href="/events/new"
-              className="shrink-0 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
+              className="shrink-0 px-4 py-3 min-h-[44px] flex items-center rounded-xl bg-oshi-pink text-white text-sm font-bold hover:bg-oshi-pink-dark transition-colors"
             >
-              ＋ イベント投稿
+              ＋ 投稿
             </a>
           )}
         </div>

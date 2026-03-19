@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { useToast } from '@/lib/toast-context'
 import type { Group, EventType } from '@/lib/types'
 import { EVENT_TYPE_LABELS } from '@/lib/types'
 
@@ -14,6 +15,7 @@ interface Props {
 export default function EventForm({ groups, userId }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const { showToast } = useToast()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -39,15 +41,15 @@ export default function EventForm({ groups, userId }: Props) {
     setError(null)
 
     if (!formData.group_id) {
-      setError('グループを選択してください')
+      setError('グループを選んでね！')
       return
     }
     if (!formData.title.trim()) {
-      setError('タイトルを入力してください')
+      setError('タイトルを入力してね！')
       return
     }
     if (!formData.start_date) {
-      setError('開始日を入力してください')
+      setError('開始日を入力してね！')
       return
     }
 
@@ -68,19 +70,21 @@ export default function EventForm({ groups, userId }: Props) {
     setLoading(false)
 
     if (insertError) {
-      setError(`投稿に失敗しました: ${insertError.message}`)
+      setError('あれ、うまくいかなかった😢 もう一度試してみて！')
       return
     }
 
-    // 投稿成功 → カレンダーへ戻る
+    showToast('イベントを投稿したよ🎉')
     router.push('/')
     router.refresh()
   }
 
+  const inputClass = 'w-full rounded-xl border border-gray-200 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-oshi-pink'
+
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+        <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">
           {error}
         </div>
       )}
@@ -88,15 +92,10 @@ export default function EventForm({ groups, userId }: Props) {
       {/* グループ */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          グループ <span className="text-red-500">*</span>
+          グループ <span className="text-oshi-pink">*</span>
         </label>
-        <select
-          name="group_id"
-          value={formData.group_id}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="">選択してください</option>
+        <select name="group_id" value={formData.group_id} onChange={handleChange} className={inputClass}>
+          <option value="">選んでね</option>
           {groups.map((g) => (
             <option key={g.id} value={g.id}>{g.name}</option>
           ))}
@@ -106,14 +105,9 @@ export default function EventForm({ groups, userId }: Props) {
       {/* イベント種別 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          種別 <span className="text-red-500">*</span>
+          種別 <span className="text-oshi-pink">*</span>
         </label>
-        <select
-          name="event_type"
-          value={formData.event_type}
-          onChange={handleChange}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
+        <select name="event_type" value={formData.event_type} onChange={handleChange} className={inputClass}>
           {(Object.keys(EVENT_TYPE_LABELS) as EventType[]).map((type) => (
             <option key={type} value={type}>{EVENT_TYPE_LABELS[type]}</option>
           ))}
@@ -123,7 +117,7 @@ export default function EventForm({ groups, userId }: Props) {
       {/* タイトル */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          タイトル <span className="text-red-500">*</span>
+          タイトル <span className="text-oshi-pink">*</span>
         </label>
         <input
           type="text"
@@ -131,7 +125,7 @@ export default function EventForm({ groups, userId }: Props) {
           value={formData.title}
           onChange={handleChange}
           placeholder="例: SUPER★DRAGON LIVE TOUR 2026"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className={inputClass}
         />
       </div>
 
@@ -139,66 +133,32 @@ export default function EventForm({ groups, userId }: Props) {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            開始日 <span className="text-red-500">*</span>
+            開始日 <span className="text-oshi-pink">*</span>
           </label>
-          <input
-            type="date"
-            name="start_date"
-            value={formData.start_date}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <input type="date" name="start_date" value={formData.start_date} onChange={handleChange} className={inputClass} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">終了日</label>
-          <input
-            type="date"
-            name="end_date"
-            value={formData.end_date}
-            onChange={handleChange}
-            min={formData.start_date}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <input type="date" name="end_date" value={formData.end_date} onChange={handleChange} min={formData.start_date} className={inputClass} />
         </div>
       </div>
 
       {/* 会場 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">会場</label>
-        <input
-          type="text"
-          name="venue"
-          value={formData.venue}
-          onChange={handleChange}
-          placeholder="例: Zepp Shinjuku"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+        <input type="text" name="venue" value={formData.venue} onChange={handleChange} placeholder="例: Zepp Shinjuku" className={inputClass} />
       </div>
 
       {/* 説明 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">説明</label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={3}
-          placeholder="イベントの詳細を入力"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-        />
+        <textarea name="description" value={formData.description} onChange={handleChange} rows={3} placeholder="イベントの詳細を入力してね" className={`${inputClass} resize-none`} />
       </div>
 
       {/* 公式URL */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">公式URL</label>
-        <input
-          type="url"
-          name="url"
-          value={formData.url}
-          onChange={handleChange}
-          placeholder="https://..."
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+        <input type="url" name="url" value={formData.url} onChange={handleChange} placeholder="https://..." className={inputClass} />
       </div>
 
       {/* ボタン */}
@@ -206,16 +166,16 @@ export default function EventForm({ groups, userId }: Props) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex-1 py-2 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+          className="flex-1 py-3 min-h-[44px] rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
         >
-          キャンセル
+          やめる
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="flex-1 py-3 min-h-[44px] rounded-xl bg-oshi-pink text-white text-sm font-bold hover:bg-oshi-pink-dark disabled:opacity-50 transition-colors"
         >
-          {loading ? '投稿中...' : '投稿する'}
+          {loading ? '投稿中...' : '投稿する🎉'}
         </button>
       </div>
     </form>
