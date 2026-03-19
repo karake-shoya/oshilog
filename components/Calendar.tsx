@@ -80,7 +80,7 @@ export default function Calendar({ events, onSelectEvent }: Props) {
   }
 
   return (
-    <div className="h-[600px] md:h-[700px]">
+    <div className="h-[450px] sm:h-[560px] md:h-[680px] min-w-0 overflow-hidden">
       <BigCalendar
         localizer={localizer}
         events={calendarEvents}

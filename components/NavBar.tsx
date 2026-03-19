@@ -85,13 +85,15 @@ export default function NavBar() {
 
           {/* ハンバーガーメニュー（モバイル） */}
           <button
-            className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
+            className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="メニュー"
           >
-            <span className="block w-5 h-0.5 bg-current mb-1.5" />
-            <span className="block w-5 h-0.5 bg-current mb-1.5" />
-            <span className="block w-5 h-0.5 bg-current" />
+            <div className="flex flex-col gap-1.5">
+              <span className="block w-5 h-0.5 bg-gray-600" />
+              <span className="block w-5 h-0.5 bg-gray-600" />
+              <span className="block w-5 h-0.5 bg-gray-600" />
+            </div>
           </button>
         </div>
 

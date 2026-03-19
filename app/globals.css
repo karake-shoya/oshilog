@@ -19,4 +19,5 @@
 html, body {
   background-color: #FAFAFA;
   color: #1a1a1a;
+  overflow-x: hidden;
 }
