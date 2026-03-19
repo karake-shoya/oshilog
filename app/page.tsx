@@ -51,17 +51,27 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">
           {user && followedGroupIds.length > 0
             ? '推しのイベント'
             : '全グループのイベント'}
         </h1>
-        {user && followedGroupIds.length === 0 && (
-          <p className="text-sm text-gray-500">
-            <a href="/groups" className="text-indigo-600 hover:underline">グループ一覧</a>からグループをフォローするとイベントが表示されます
-          </p>
-        )}
+        <div className="flex items-center gap-3">
+          {user && followedGroupIds.length === 0 && (
+            <p className="text-sm text-gray-500 hidden sm:block">
+              <a href="/groups" className="text-indigo-600 hover:underline">グループ一覧</a>からフォローするとイベントが表示されます
+            </p>
+          )}
+          {user && (
+            <a
+              href="/events/new"
+              className="shrink-0 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors"
+            >
+              ＋ イベント投稿
+            </a>
+          )}
+        </div>
       </div>
 
       {/* イベント種別の凡例 */}
