@@ -80,7 +80,7 @@ export default function Calendar({ events, onSelectEvent }: Props) {
   }
 
   return (
-    <div className="h-[450px] sm:h-[560px] md:h-[680px] min-w-0 overflow-hidden">
+    <div className="h-[450px] sm:h-[560px] md:h-[680px] min-w-0">
       <BigCalendar
         localizer={localizer}
         events={calendarEvents}
@@ -90,6 +90,7 @@ export default function Calendar({ events, onSelectEvent }: Props) {
         culture="ja"
         eventPropGetter={eventStyleGetter}
         onSelectEvent={handleSelectEvent}
+        scrollToTime={new Date(1970, 1, 1, 9)}
         popup
         style={{ height: '100%' }}
       />

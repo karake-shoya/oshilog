@@ -46,7 +46,7 @@ export default function CalendarView({ events, groups }: Props) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 overflow-x-auto">
         <Calendar events={events} onSelectEvent={setSelectedEvent} />
       </div>
 
